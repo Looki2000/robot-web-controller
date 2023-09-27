@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+        <script src="{{url_for('static', filename='js/script.js')}}"></script>
+        
+    </head>
+
+    <body>
+        <div class="container">
+            <img src="{{ url_for('video_feed') }}">
+        </div>
+
+        <button class="fullscreen" onclick="document.documentElement.requestFullscreen();">Fullscreen</button>
+    </body>
+</html>
