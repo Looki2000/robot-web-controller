@@ -4,8 +4,8 @@
     "liveServer.settings.CustomBrowser": "chrome",
     "liveServer.settings.https": {
     "enable": true,
-    "cert": "https\\localhost.pem",
-    "key": "https\\localhost.key",
+    "cert": "C:\\Users\\elect\\Desktop\\robot-web-controller\\https\\localhost.pem",
+    "key": "C:\\Users\\elect\\Desktop\\robot-web-controller\\https\\localhost.key",
     "passphrase": "amogus"
     }
 }

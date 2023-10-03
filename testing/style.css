@@ -28,7 +28,51 @@ img {
     height: 100%;
 }
 
+.control_overlay_pad {
+
+    --overlay-margin: 5%;
+
+    position: absolute;
+    top: 0;
+    
+    /*
+    width: calc(100% - (2 * var(--overlay-margin)));
+    height: calc(100% - (2 * var(--overlay-margin)));
+    */
+    width: 100%;
+    height: 100%;
+
+    
+    margin: var(--overlay-margin);
+    
+    
+}
+
+.control_overlay {
+    --button-margin: 10%;
+
+
+
+    display: grid;
+    column-gap: var(--button-margin);
+    row-gap: var(--button-margin);
+    
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
 .button {
+    background-color: rgb(50, 50, 50);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+}
+
+.control_overlay .button {
+    background-color: rgba(20, 30, 50, 0.5);
+}
+
+.button_fullscreen {
     width: 100%;
     height: 5%;
     background-color: rgb(50, 50, 50);
