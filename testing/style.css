@@ -28,48 +28,54 @@ img {
     height: 100%;
 }
 
-.control_overlay_pad {
+.button {
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border: 2px solid rgb(60, 60, 60, 0.5);
+    font-size: 1.5rem;
 
-    --overlay-margin: 5%;
+    width: 100%;
+    height: 100%;
+}
 
+
+
+.fb_control_overlay {
+    display: grid;
     position: absolute;
     top: 0;
     
-    /*
-    width: calc(100% - (2 * var(--overlay-margin)));
-    height: calc(100% - (2 * var(--overlay-margin)));
-    */
-    width: 100%;
-    height: 100%;
+    
+    --overlay-pad: 10px;
+    
+    width: calc(25% - (2 * var(--overlay-pad)));
+    height: calc(100% - (2 * var(--overlay-pad)));
+    
+    padding: var(--overlay-pad);
 
-    
-    margin: var(--overlay-margin);
-    
-    
+    grid-gap: 1px;
 }
 
-.control_overlay {
-    --button-margin: 10%;
 
-
-
+.lr_control_overlay {
     display: grid;
-    column-gap: var(--button-margin);
-    row-gap: var(--button-margin);
+    position: absolute;
+    top: 0;
+    right: 0;
     
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-}
+    
+    --overlay-pad: 10px;
+    
+    width: calc(40% - (2 * var(--overlay-pad)));
+    height: calc(100% - (2 * var(--overlay-pad)));
+    
+    padding: var(--overlay-pad);
 
-.button {
-    background-color: rgb(50, 50, 50);
-    color: white;
-    border: none;
-    font-size: 1.5rem;
-}
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 
-.control_overlay .button {
-    background-color: rgba(20, 30, 50, 0.5);
+    grid-gap: 1px;
+
 }
 
 .button_fullscreen {
