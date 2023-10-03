@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -13,5 +13,39 @@
         </div>
 
         <button class="fullscreen" onclick="document.documentElement.requestFullscreen();">Fullscreen</button>
+    </body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        
+    </head>
+
+    <body>
+        <div class="image_container">
+            <img src="{{ url_for('video_feed') }}">
+        </div>
+
+        <div class="overlay">
+            <button class="button_fullscreen" id="fullscreen" onclick="document.documentElement.requestFullscreen();">Fullscreen</button>
+            <p id="button_state">loading...</p>
+        </div>
+
+        <div class="fb_control_overlay">
+            <button class="button" id="forward">/\</button>
+            <button class="button" id="backward">\/</button>
+        </div>
+
+        <div class="lr_control_overlay">
+            <button class="button" id="left"><</button>
+            <button class="button" id="right">></button>
+        </div>
+
+
     </body>
 </html>
