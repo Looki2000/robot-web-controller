@@ -57,4 +57,8 @@ def buttons():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5002, host="192.168.100.7")
+    with open("ip.txt", "r") as f:
+        ip = f.read()
+        print(f"ip: {ip}")
+
+    app.run(debug=False, port=5002, host=ip)
