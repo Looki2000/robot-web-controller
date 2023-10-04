@@ -16,6 +16,8 @@ if sys.platform.startswith("linux"):
         # get pid of port 5002
         pid = os.popen("lsof -t -i:5002").read()
 
+        print(f"pid: {pid}")
+
         # kill process
         os.system(f"kill {pid}")
 
