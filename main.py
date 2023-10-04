@@ -147,8 +147,8 @@ def motor_driver():
         if motor_right_target - motor_right_old < 0.1:
             motor_right = motor_right_target
 
-        print(buttons_array)
-        print(f"motor_left: {motor_left}, motor_right: {motor_right}")
+        #print(buttons_array)
+        #print(f"motor_left: {motor_left}, motor_right: {motor_right}")
 
         
 
