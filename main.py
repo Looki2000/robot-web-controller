@@ -150,13 +150,13 @@ def motor_driver():
         print(buttons_array)
         print(f"motor_left: {motor_left}, motor_right: {motor_right}")
 
-        pins_state_string = ""
+        
 
         if is_linux:
             #GPIO.output(LEFT_MOTOR_PWM, abs(motor_left))
             #GPIO.output(RIGHT_MOTOR_PWM, abs(motor_right))
 
-            pins_state_string += f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
+            pins_state_string = f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
 
             if motor_left > 0:
                 #GPIO.output(LEFT_MOTOR_DIR_1, 1)
@@ -188,6 +188,8 @@ def motor_driver():
                 #GPIO.output(RIGHT_MOTOR_DIR_1, 0)
                 #GPIO.output(RIGHT_MOTOR_DIR_2, 0)
                 pins_state_string += "R DIR1: 0, R DIR2: 0 | "
+
+            print(pins_state_string)
 
 
         # perfect delay for making loop oscillate exactly at loop_hz frequency, no matter how long does it take to execute the code inside the loop
