@@ -39,7 +39,7 @@ log.setLevel(logging.ERROR)
 
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
 
-loop_hz = 50
+loop_hz = 60
 loop_delay = 1/loop_hz
 
 #Initialize the Flask app
