@@ -4,17 +4,23 @@ import cv2
 import struct
 import time
 import threading
-import atexit
 from flask import request
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-def cleanup():
-    shutdown_server()
+import sys
+import os
 
-atexit.register(cleanup)
+# if linux
+if sys.platform.startswith("linux"):
+    import atexit
+
+    def cleanup():
+        # get pid of port 5002
+        pid = os.popen("lsof -t -i:5002").read()
+
+        # kill process
+        os.system(f"kill {pid}")
+
+
+    atexit.register(cleanup)
 
 
 #Import GPIO library for RPI
