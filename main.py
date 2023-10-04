@@ -92,6 +92,10 @@ def motor_driver():
             motor_left_target += 0.5
         motor_left = (motor_left_target + motor_left_old) / 2
         motor_right = (motor_right_target + motor_right_old) / 2
+        if motor_left_target - motor_left_old<0.1:
+            motor_left = motor_left_target
+        if motor_right_target - motor_right_old<0.1:
+            motor_right = motor_right_target
 
         time.sleep(loop_delay - time.perf_counter() % loop_delay)
 
