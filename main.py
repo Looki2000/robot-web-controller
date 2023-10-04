@@ -12,7 +12,7 @@ def shutdown_server():
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
 def cleanup():
-    
+    shutdown_server()
 
 atexit.register(cleanup)
 
