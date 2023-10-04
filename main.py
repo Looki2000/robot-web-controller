@@ -4,6 +4,12 @@ import cv2
 import struct
 import time
 import threading
+import atexit
+
+def cleanup():
+    app.quit()
+
+atexit.register(cleanup)
 
 
 #Import GPIO library for RPI
