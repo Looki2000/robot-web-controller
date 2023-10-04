@@ -7,7 +7,7 @@ import threading
 
 
 #Import GPIO library for RPI
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 LEFT_MOTOR_PWM = 12
 RIGHT_MOTOR_PWM = 13
 
@@ -89,8 +89,7 @@ def motor_driver():
         # processing buttons array to make smooth movement
         print(buttons_array)
 
-        # perfect delay for making loop oscillate exactly at loop_hz frequency, no matter how long does it take to execute the code inside the loop
-        
+
         if buttons_array[0]:
             motor_right_target += 1.0
             motor_left_target += 1.0
@@ -109,29 +108,34 @@ def motor_driver():
             motor_left = motor_left_target
         if motor_right_target - motor_right_old<0.1:
             motor_right = motor_right_target
-        GPIO.setup(LEFT_MOTOR_PWM, abs(motor_left))
-        GPIO.setup(RIGHT_MOTOR_PWM, abs(motor_right))
 
-        if motor_left > 0:
-            GPIO.setup(LEFT_MOTOR_DIR_1, 1)
-            GPIO.setup(LEFT_MOTOR_DIR_2, 0)
-        elif motor_left < 0:
-            GPIO.setup(LEFT_MOTOR_DIR_1, 0)
-            GPIO.setup(LEFT_MOTOR_DIR_2, 1)
-        elif motor_left== 0:
-            GPIO.setup(LEFT_MOTOR_DIR_1, 0)
-            GPIO.setup(LEFT_MOTOR_DIR_2, 0)
-        
 
-        if motor_right > 0:
-            GPIO.setup(RIGHT_MOTOR_DIR_1, 1)
-            GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
-        elif motor_right < 0:
-            GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
-            GPIO.setup(RIGHT_MOTOR_DIR_2, 1)
-        elif motor_right== 0:
-            GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
-            GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
+        #GPIO.setup(LEFT_MOTOR_PWM, abs(motor_left))
+        #GPIO.setup(RIGHT_MOTOR_PWM, abs(motor_right))
+#
+        #if motor_left > 0:
+        #    GPIO.setup(LEFT_MOTOR_DIR_1, 1)
+        #    GPIO.setup(LEFT_MOTOR_DIR_2, 0)
+        #elif motor_left < 0:
+        #    GPIO.setup(LEFT_MOTOR_DIR_1, 0)
+        #    GPIO.setup(LEFT_MOTOR_DIR_2, 1)
+        #elif motor_left== 0:
+        #    GPIO.setup(LEFT_MOTOR_DIR_1, 0)
+        #    GPIO.setup(LEFT_MOTOR_DIR_2, 0)
+        #
+#
+        #if motor_right > 0:
+        #    GPIO.setup(RIGHT_MOTOR_DIR_1, 1)
+        #    GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
+        #elif motor_right < 0:
+        #    GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
+        #    GPIO.setup(RIGHT_MOTOR_DIR_2, 1)
+        #elif motor_right== 0:
+        #    GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
+        #    GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
+
+
+        # perfect delay for making loop oscillate exactly at loop_hz frequency, no matter how long does it take to execute the code inside the loop
         time.sleep(loop_delay - time.perf_counter() % loop_delay)
 
 
