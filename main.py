@@ -142,7 +142,7 @@ def motor_driver():
 
 if __name__ == "__main__":
     with open("ip.txt", "r") as f:
-        ip = f.read()
+        ip = f.read().splitlines()[0]
         print(f"ip: {ip}")
 
     buttons_array = [False, False, False, False]
