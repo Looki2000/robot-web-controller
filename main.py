@@ -16,7 +16,7 @@ if sys.platform.startswith("linux"):
     print(f"pid: {pid}")
 
     # kill process
-    os.system(f"kill {pid}")
+    os.system(f"kill -9 {pid}")
 
 
 
