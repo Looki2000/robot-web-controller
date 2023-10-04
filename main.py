@@ -7,7 +7,7 @@ import threading
 import atexit
 
 def cleanup():
-    app.quit()
+    
 
 atexit.register(cleanup)
 
@@ -116,6 +116,16 @@ def motor_driver():
         if buttons_array[3]:
             motor_right_target -= 0.5
             motor_left_target += 0.5
+
+        if motor_right_target > 1.0:
+            motor_right_target = 1.0
+        if motor_right_target < -1.0:
+            motor_right_target = -1.0
+
+        if motor_left_target > 1.0:
+            motor_left_target = 1.0
+        if motor_left_target < -1.0:
+            motor_left_target = -1.0
 
         motor_left = (motor_left_target + motor_left_old) / 2
         motor_right = (motor_right_target + motor_right_old) / 2
