@@ -10,19 +10,15 @@ import os
 
 # if linux
 if sys.platform.startswith("linux"):
-    import atexit
+    # get pid of port 5002
+    pid = os.popen("lsof -t -i:5002").read()
 
-    def cleanup():
-        # get pid of port 5002
-        pid = os.popen("lsof -t -i:5002").read()
+    print(f"pid: {pid}")
 
-        print(f"pid: {pid}")
-
-        # kill process
-        os.system(f"kill {pid}")
+    # kill process
+    os.system(f"kill {pid}")
 
 
-    atexit.register(cleanup)
 
 
 #Import GPIO library for RPI
