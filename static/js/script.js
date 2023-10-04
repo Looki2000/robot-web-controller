@@ -21,13 +21,13 @@ document.addEventListener("fullscreenchange", function () {
 window.addEventListener("DOMContentLoaded", (event) => {
 
 
-    function send_buttons_data() {
-        document.getElementById("button_state").innerHTML = buttons;
+    function send_buttons_data(buttons_array) {
+        document.getElementById("button_state").innerHTML = buttons_array;
 
         // send button states to server as raw binary data
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "/buttons", true);
-        xhttp.send(new Uint8Array(buttons));
+        xhttp.send(new Uint8Array(buttons_array));
         
     }
 
@@ -46,22 +46,22 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         element.addEventListener("mousedown", function () {
             buttons[idx] = true;
-            send_buttons_data();
+            send_buttons_data(buttons);
         });
 
         element.addEventListener("mouseup", function () {
             buttons[idx] = false;
-            send_buttons_data();
+            send_buttons_data(buttons);
         });
 
         element.addEventListener("touchstart", function () {
             buttons[idx] = true;
-            send_buttons_data();
+            send_buttons_data(buttons);
         });
 
         element.addEventListener("touchend", function () {
             buttons[idx] = false;
-            send_buttons_data();
+            send_buttons_data(buttons);
         });
 
     });
