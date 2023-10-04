@@ -39,7 +39,7 @@ log.setLevel(logging.ERROR)
 
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
 
-loop_hz = 10
+loop_hz = 50
 loop_delay = 1/loop_hz
 
 #Initialize the Flask app
@@ -110,7 +110,7 @@ def motor_driver():
         motor_right_old = motor_right
         motor_left_old = motor_left
         # processing buttons array to make smooth movement
-        print(buttons_array)
+        #print(buttons_array)
 
 
         if buttons_array[0]:
@@ -145,7 +145,7 @@ def motor_driver():
             motor_right = motor_right_target
 
         
-        print(f"motor_left: {motor_left}, motor_right: {motor_right}")
+        print(f"{buttons_array} | motor_left: {motor_left}, motor_right: {motor_right}")
 
 
         #GPIO.setup(LEFT_MOTOR_PWM, abs(motor_left))
