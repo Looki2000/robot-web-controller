@@ -4,7 +4,14 @@ import cv2
 import struct
 import time
 import threading
-
+#Import GPIO library for RPI
+import RPi.GPIO as GPIO
+LEFT_MOTOR_PWM = 12
+LEFT_MOTOR_DIR_1 = 16
+LEFT_MOTOR_DIR_2 = 18
+RIGHT_MOTOR_PWM = 13
+RIGHT_MOTOR_DIR_1 = 19
+RIGHT_MOTOR_DIR_2 = 21
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -96,7 +103,29 @@ def motor_driver():
             motor_left = motor_left_target
         if motor_right_target - motor_right_old<0.1:
             motor_right = motor_right_target
+        GPIO.setup(LEFT_MOTOR_PWM, abs(motor_left))
+        GPIO.setup(RIGHT_MOTOR_PWM, abs(motor_right))
 
+        if motor_left > 0:
+            GPIO.setup(LEFT_MOTOR_DIR_1, 1)
+            GPIO.setup(LEFT_MOTOR_DIR_2, 0)
+        elif motor_left < 0:
+            GPIO.setup(LEFT_MOTOR_DIR_1, 0)
+            GPIO.setup(LEFT_MOTOR_DIR_2, 1)
+        elif motor_left== 0:
+            GPIO.setup(LEFT_MOTOR_DIR_1, 0)
+            GPIO.setup(LEFT_MOTOR_DIR_2, 0)
+        
+
+        if motor_right > 0:
+            GPIO.setup(RIGHT_MOTOR_DIR_1, 1)
+            GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
+        elif motor_right < 0:
+            GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
+            GPIO.setup(RIGHT_MOTOR_DIR_2, 1)
+        elif motor_right== 0:
+            GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
+            GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
         time.sleep(loop_delay - time.perf_counter() % loop_delay)
 
 
