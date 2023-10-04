@@ -9,7 +9,10 @@ import sys
 import os
 
 # if linux
-if sys.platform.startswith("linux"):
+is_linux = sys.platform.startswith("linux")
+if is_linux:
+    import RPi.GPIO as GPIO
+
     # get pid of port 5002
     pid = os.popen("lsof -t -i:5002").read()
 
@@ -144,33 +147,47 @@ def motor_driver():
         if motor_right_target - motor_right_old < 0.1:
             motor_right = motor_right_target
 
-        
-        print(f"{buttons_array} | motor_left: {motor_left}, motor_right: {motor_right}")
+        print(buttons_array)
+        print(f"motor_left: {motor_left}, motor_right: {motor_right}")
 
+        pins_state_string = ""
 
-        #GPIO.setup(LEFT_MOTOR_PWM, abs(motor_left))
-        #GPIO.setup(RIGHT_MOTOR_PWM, abs(motor_right))
-#
-        #if motor_left > 0:
-        #    GPIO.setup(LEFT_MOTOR_DIR_1, 1)
-        #    GPIO.setup(LEFT_MOTOR_DIR_2, 0)
-        #elif motor_left < 0:
-        #    GPIO.setup(LEFT_MOTOR_DIR_1, 0)
-        #    GPIO.setup(LEFT_MOTOR_DIR_2, 1)
-        #elif motor_left== 0:
-        #    GPIO.setup(LEFT_MOTOR_DIR_1, 0)
-        #    GPIO.setup(LEFT_MOTOR_DIR_2, 0)
-        #
-#
-        #if motor_right > 0:
-        #    GPIO.setup(RIGHT_MOTOR_DIR_1, 1)
-        #    GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
-        #elif motor_right < 0:
-        #    GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
-        #    GPIO.setup(RIGHT_MOTOR_DIR_2, 1)
-        #elif motor_right== 0:
-        #    GPIO.setup(RIGHT_MOTOR_DIR_1, 0)
-        #    GPIO.setup(RIGHT_MOTOR_DIR_2, 0)
+        if is_linux:
+            #GPIO.output(LEFT_MOTOR_PWM, abs(motor_left))
+            #GPIO.output(RIGHT_MOTOR_PWM, abs(motor_right))
+
+            pins_state_string += f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
+
+            if motor_left > 0:
+                #GPIO.output(LEFT_MOTOR_DIR_1, 1)
+                #GPIO.output(LEFT_MOTOR_DIR_2, 0)
+                pins_state_string += "L DIR1: 1, L DIR2: 0 | "
+
+            elif motor_left < 0:
+                #GPIO.output(LEFT_MOTOR_DIR_1, 0)
+                #GPIO.output(LEFT_MOTOR_DIR_2, 1)
+                pins_state_string += "L DIR1: 0, L DIR2: 1 | "
+                
+            elif motor_left== 0:
+                #GPIO.output(LEFT_MOTOR_DIR_1, 0)
+                #GPIO.output(LEFT_MOTOR_DIR_2, 0)
+                pins_state_string += "L DIR1: 0, L DIR2: 0 | "
+            
+
+            if motor_right > 0:
+                #GPIO.output(RIGHT_MOTOR_DIR_1, 1)
+                #GPIO.output(RIGHT_MOTOR_DIR_2, 0)
+                pins_state_string += "R DIR1: 1, R DIR2: 0 | "
+
+            elif motor_right < 0:
+                #GPIO.output(RIGHT_MOTOR_DIR_1, 0)
+                #GPIO.output(RIGHT_MOTOR_DIR_2, 1)
+                pins_state_string += "R DIR1: 0, R DIR2: 1 | "
+
+            elif motor_right== 0:
+                #GPIO.output(RIGHT_MOTOR_DIR_1, 0)
+                #GPIO.output(RIGHT_MOTOR_DIR_2, 0)
+                pins_state_string += "R DIR1: 0, R DIR2: 0 | "
 
 
         # perfect delay for making loop oscillate exactly at loop_hz frequency, no matter how long does it take to execute the code inside the loop
