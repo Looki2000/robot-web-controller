@@ -34,19 +34,7 @@ app = Flask(__name__)
 # Create a lock to ensure that frames are sent one at a time
 frame_lock = threading.Lock()
 
-#def gen_frames():
-#
-#    camera = cv2.VideoCapture(0)
-#
-#    while True:
-#        success, frame = camera.read()  # read the camera frame
-#        if not success:
-#            break
-#        else:
-#            #buffer = cv2.imencode('.jpg', frame)[1]
-#            buffer = cv2.imencode('.jpg', frame, encode_param)[1]
-#            frame = buffer.tobytes()
-#            yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+
 def gen_frames():
     camera = cv2.VideoCapture(0)
 
@@ -72,9 +60,6 @@ def gen_frames():
 def index():
     return render_template("index.html")
 
-#@app.route('/video_feed')
-#def video_feed():
-#    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/video_feed')
 def video_feed():
@@ -85,7 +70,6 @@ def video_feed():
 
 
 # receive data from client
-#192.168.100.9 - - [03/Oct/2023 23:32:24] "POST /buttons HTTP/1.1" 404 -
 @app.route('/buttons', methods=['POST'])
 def buttons():
     global buttons_array
@@ -126,12 +110,17 @@ def motor_driver():
         if buttons_array[3]:
             motor_right_target -= 0.5
             motor_left_target += 0.5
+
         motor_left = (motor_left_target + motor_left_old) / 2
         motor_right = (motor_right_target + motor_right_old) / 2
-        if motor_left_target - motor_left_old<0.1:
+
+        if motor_left_target - motor_left_old < 0.1:
             motor_left = motor_left_target
-        if motor_right_target - motor_right_old<0.1:
+        if motor_right_target - motor_right_old < 0.1:
             motor_right = motor_right_target
+
+        
+        print(f"motor_left: {motor_left}, motor_right: {motor_right}")
 
 
         #GPIO.setup(LEFT_MOTOR_PWM, abs(motor_left))
