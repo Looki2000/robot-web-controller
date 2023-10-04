@@ -4,14 +4,20 @@ import cv2
 import struct
 import time
 import threading
+
+
 #Import GPIO library for RPI
 import RPi.GPIO as GPIO
 LEFT_MOTOR_PWM = 12
-LEFT_MOTOR_DIR_1 = 16
-LEFT_MOTOR_DIR_2 = 18
 RIGHT_MOTOR_PWM = 13
+
+LEFT_MOTOR_DIR_1 = 16
 RIGHT_MOTOR_DIR_1 = 19
+
+LEFT_MOTOR_DIR_2 = 18
 RIGHT_MOTOR_DIR_2 = 21
+
+
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
