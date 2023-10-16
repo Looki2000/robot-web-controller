@@ -1,4 +1,4 @@
-#Import necessary libraries
+import os
 from flask import Flask, render_template, Response, request
 import cv2
 import struct
@@ -6,11 +6,13 @@ import time
 import threading
 from flask import request
 import sys
-import os
+
 
 # if linux
 is_linux = sys.platform.startswith("linux")
 if is_linux:
+    os.system("nmcli connection up penetration\ master")
+    
     import RPi.GPIO as GPIO
 
     # get pid of port 5002
@@ -23,9 +25,6 @@ if is_linux:
 
 
 
-
-#Import GPIO library for RPI
-import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 LEFT_MOTOR_PWM = 12
 RIGHT_MOTOR_PWM = 13
@@ -38,6 +37,10 @@ RIGHT_MOTOR_DIR_2 = 21
 
 GPIO.setup(LEFT_MOTOR_PWM, GPIO.OUT)
 GPIO.setup(RIGHT_MOTOR_PWM, GPIO.OUT)
+lmp = GPIO.PWM(LEFT_MOTOR_PWM,1000)
+lmp.start(0)
+rmp = GPIO.PWM(RIGHT_MOTOR_PWM, 1000)
+rmp.start(0)
 
 GPIO.setup(LEFT_MOTOR_DIR_1, GPIO.OUT)
 GPIO.setup(RIGHT_MOTOR_DIR_1, GPIO.OUT)
@@ -162,43 +165,47 @@ def motor_driver():
         
 
         if is_linux:
-            GPIO.output(LEFT_MOTOR_PWM, int(abs(motor_left)))
-            GPIO.output(RIGHT_MOTOR_PWM, int(abs(motor_right)))
+            #GPIO.output(LEFT_MOTOR_PWM, abs(motor_left))
+            #GPIO.output(RIGHT_MOTOR_PWM, abs(motor_right))
+            	
+            lmp.ChangeDutyCycle(int(abs(motor_left*100)))
+	
+            rmp.ChangeDutyCycle(int(abs(motor_right*100)))
 
-            pins_state_string = f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
+            #pins_state_string = f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
 
             if motor_left > 0:
                 GPIO.output(LEFT_MOTOR_DIR_1, 1)
                 GPIO.output(LEFT_MOTOR_DIR_2, 0)
-                pins_state_string += "L DIR1: 1, L DIR2: 0 | "
+                #pins_state_string += "L DIR1: 1, L DIR2: 0 | "
 
             elif motor_left < 0:
                 GPIO.output(LEFT_MOTOR_DIR_1, 0)
                 GPIO.output(LEFT_MOTOR_DIR_2, 1)
-                pins_state_string += "L DIR1: 0, L DIR2: 1 | "
+                #pins_state_string += "L DIR1: 0, L DIR2: 1 | "
                 
             elif motor_left== 0:
                 GPIO.output(LEFT_MOTOR_DIR_1, 0)
                 GPIO.output(LEFT_MOTOR_DIR_2, 0)
-                pins_state_string += "L DIR1: 0, L DIR2: 0 | "
+                #pins_state_string += "L DIR1: 0, L DIR2: 0 | "
             
 
             if motor_right > 0:
                 GPIO.output(RIGHT_MOTOR_DIR_1, 1)
                 GPIO.output(RIGHT_MOTOR_DIR_2, 0)
-                pins_state_string += "R DIR1: 1, R DIR2: 0 | "
+                #pins_state_string += "R DIR1: 1, R DIR2: 0 | "
 
             elif motor_right < 0:
                 GPIO.output(RIGHT_MOTOR_DIR_1, 0)
                 GPIO.output(RIGHT_MOTOR_DIR_2, 1)
-                pins_state_string += "R DIR1: 0, R DIR2: 1 | "
+                #pins_state_string += "R DIR1: 0, R DIR2: 1 | "
 
             elif motor_right== 0:
                 GPIO.output(RIGHT_MOTOR_DIR_1, 0)
                 GPIO.output(RIGHT_MOTOR_DIR_2, 0)
-                pins_state_string += "R DIR1: 0, R DIR2: 0 | "
+                #pins_state_string += "R DIR1: 0, R DIR2: 0 | "
 
-            print(pins_state_string)
+            #print(pins_state_string)
 
 
         # perfect delay for making loop oscillate exactly at loop_hz frequency, no matter how long does it take to execute the code inside the loop
@@ -207,7 +214,11 @@ def motor_driver():
 
 
 if __name__ == "__main__":
-    with open("ip.txt", "r") as f:
+        
+    ip_path = os.path.join(os.path.dirname(__file__), "ip.txt")
+
+    
+    with open(ip_path, "r") as f:
         ip = f.read().splitlines()[0]
         print(f"ip: {ip}")
 
