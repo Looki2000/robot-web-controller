@@ -25,7 +25,8 @@ if is_linux:
 
 
 #Import GPIO library for RPI
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
 LEFT_MOTOR_PWM = 12
 RIGHT_MOTOR_PWM = 13
 
@@ -35,6 +36,14 @@ RIGHT_MOTOR_DIR_1 = 19
 LEFT_MOTOR_DIR_2 = 18
 RIGHT_MOTOR_DIR_2 = 21
 
+GPIO.setup(LEFT_MOTOR_PWM, GPIO.OUT)
+GPIO.setup(RIGHT_MOTOR_PWM, GPIO.OUT)
+
+GPIO.setup(LEFT_MOTOR_DIR_1, GPIO.OUT)
+GPIO.setup(RIGHT_MOTOR_DIR_1, GPIO.OUT)
+
+GPIO.setup(LEFT_MOTOR_DIR_2, GPIO.OUT)
+GPIO.setup(RIGHT_MOTOR_DIR_2, GPIO.OUT)
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -153,40 +162,40 @@ def motor_driver():
         
 
         if is_linux:
-            #GPIO.output(LEFT_MOTOR_PWM, abs(motor_left))
-            #GPIO.output(RIGHT_MOTOR_PWM, abs(motor_right))
+            GPIO.output(LEFT_MOTOR_PWM, int(abs(motor_left)))
+            GPIO.output(RIGHT_MOTOR_PWM, int(abs(motor_right)))
 
             pins_state_string = f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
 
             if motor_left > 0:
-                #GPIO.output(LEFT_MOTOR_DIR_1, 1)
-                #GPIO.output(LEFT_MOTOR_DIR_2, 0)
+                GPIO.output(LEFT_MOTOR_DIR_1, 1)
+                GPIO.output(LEFT_MOTOR_DIR_2, 0)
                 pins_state_string += "L DIR1: 1, L DIR2: 0 | "
 
             elif motor_left < 0:
-                #GPIO.output(LEFT_MOTOR_DIR_1, 0)
-                #GPIO.output(LEFT_MOTOR_DIR_2, 1)
+                GPIO.output(LEFT_MOTOR_DIR_1, 0)
+                GPIO.output(LEFT_MOTOR_DIR_2, 1)
                 pins_state_string += "L DIR1: 0, L DIR2: 1 | "
                 
             elif motor_left== 0:
-                #GPIO.output(LEFT_MOTOR_DIR_1, 0)
-                #GPIO.output(LEFT_MOTOR_DIR_2, 0)
+                GPIO.output(LEFT_MOTOR_DIR_1, 0)
+                GPIO.output(LEFT_MOTOR_DIR_2, 0)
                 pins_state_string += "L DIR1: 0, L DIR2: 0 | "
             
 
             if motor_right > 0:
-                #GPIO.output(RIGHT_MOTOR_DIR_1, 1)
-                #GPIO.output(RIGHT_MOTOR_DIR_2, 0)
+                GPIO.output(RIGHT_MOTOR_DIR_1, 1)
+                GPIO.output(RIGHT_MOTOR_DIR_2, 0)
                 pins_state_string += "R DIR1: 1, R DIR2: 0 | "
 
             elif motor_right < 0:
-                #GPIO.output(RIGHT_MOTOR_DIR_1, 0)
-                #GPIO.output(RIGHT_MOTOR_DIR_2, 1)
+                GPIO.output(RIGHT_MOTOR_DIR_1, 0)
+                GPIO.output(RIGHT_MOTOR_DIR_2, 1)
                 pins_state_string += "R DIR1: 0, R DIR2: 1 | "
 
             elif motor_right== 0:
-                #GPIO.output(RIGHT_MOTOR_DIR_1, 0)
-                #GPIO.output(RIGHT_MOTOR_DIR_2, 0)
+                GPIO.output(RIGHT_MOTOR_DIR_1, 0)
+                GPIO.output(RIGHT_MOTOR_DIR_2, 0)
                 pins_state_string += "R DIR1: 0, R DIR2: 0 | "
 
             print(pins_state_string)
