@@ -68,15 +68,18 @@ frame_lock = threading.Lock()
 def gen_frames():
 
     while True:
-        success, frame = camera.read()
-        if not success:
-            break
-        else:
+        if new_frame_ready:
+            #success, frame = camera.read()
+            #if not success:
+                #break
+            #else:
             buffer = cv2.imencode('.jpg', frame, encode_param)[1]
             frame_bytes = buffer.tobytes()
-            
+                
             with frame_lock:
                 yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                
+            new_frame_ready = False
 
 
 
@@ -213,24 +216,30 @@ def motor_driver():
 
 
 def video_writer():
+    global frame
+    
     fps = camera.get(cv2.CAP_PROP_FPS)
     width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
+    print("cam fps:", fps)
+    print(f"{width} x {height}")
 
     writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%Y-%m-%d_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), fps, (width, height))
-
+    
+    print("capturing!")
     while True:
         success, frame = camera.read()
         if not success:
             continue
         else:
+            new_frame_ready = True
             writer.write(frame)
 
 
 
 if __name__ == "__main__":
-    global run_path
-    global camera
+    global new_frame_ready
 
     run_path = os.path.dirname(__file__)
 
@@ -253,8 +262,11 @@ if __name__ == "__main__":
     camera = cv2.VideoCapture(0)
 
     # video writer thread
+    print("starting vid write thread")
+    new_frame_ready = False
     t_video = threading.Thread(target=video_writer, daemon=True)
     t_video.start()
+    
     
 
     # start flask app
