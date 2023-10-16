@@ -35,6 +35,7 @@ RIGHT_MOTOR_DIR_1 = 19
 LEFT_MOTOR_DIR_2 = 18
 RIGHT_MOTOR_DIR_2 = 21
 
+<<<<<<< HEAD
 GPIO.setup(LEFT_MOTOR_PWM, GPIO.OUT)
 GPIO.setup(RIGHT_MOTOR_PWM, GPIO.OUT)
 lmp = GPIO.PWM(LEFT_MOTOR_PWM,1000)
@@ -47,6 +48,31 @@ GPIO.setup(RIGHT_MOTOR_DIR_1, GPIO.OUT)
 
 GPIO.setup(LEFT_MOTOR_DIR_2, GPIO.OUT)
 GPIO.setup(RIGHT_MOTOR_DIR_2, GPIO.OUT)
+=======
+if is_linux:
+    # initialize GPIO
+    GPIO.setmode(GPIO.BCM)
+
+    # set GPIO pins
+    GPIO.setup(LEFT_MOTOR_PWM, GPIO.OUT)
+    GPIO.setup(RIGHT_MOTOR_PWM, GPIO.OUT)
+    
+    GPIO.setup(LEFT_MOTOR_DIR_1, GPIO.OUT)
+    GPIO.setup(RIGHT_MOTOR_DIR_1, GPIO.OUT)
+
+    GPIO.setup(LEFT_MOTOR_DIR_2, GPIO.OUT)
+    GPIO.setup(RIGHT_MOTOR_DIR_2, GPIO.OUT)
+
+    # set PWM frequency
+    pwm_frequency = 1000
+
+    left_motor_pwm = GPIO.PWM(LEFT_MOTOR_PWM, pwm_frequency)
+    right_motor_pwm = GPIO.PWM(RIGHT_MOTOR_PWM, pwm_frequency)
+
+    left_motor_pwm.start(0)
+    right_motor_pwm.start(0)
+
+>>>>>>> c01a22510e7f854cee200390ec80a184b70ef778
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -162,6 +188,21 @@ def motor_driver():
         #print(buttons_array)
         #print(f"motor_left: {motor_left}, motor_right: {motor_right}")
 
+        pins_state_string = f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
+        if motor_left > 0:
+            pins_state_string += "L DIR1: 1, L DIR2: 0 | "
+        elif motor_left < 0:
+            pins_state_string += "L DIR1: 0, L DIR2: 1 | "
+        elif motor_left== 0:
+            pins_state_string += "L DIR1: 0, L DIR2: 0 | "
+        if motor_right > 0:
+            pins_state_string += "R DIR1: 1, R DIR2: 0 | "
+        elif motor_right < 0:
+            pins_state_string += "R DIR1: 0, R DIR2: 1 | "
+        elif motor_right== 0:
+            pins_state_string += "R DIR1: 0, R DIR2: 0 | "
+        
+        print(pins_state_string)
         
 
         if is_linux:
@@ -172,16 +213,26 @@ def motor_driver():
 	
             rmp.ChangeDutyCycle(int(abs(motor_right*100)))
 
+<<<<<<< HEAD
             #pins_state_string = f"L PWM: {abs(motor_left)}, R PWM: {abs(motor_right)} | "
+=======
+            # pwm
+            left_motor_pwm.ChangeDutyCycle(abs(motor_left) * 100)
+            right_motor_pwm.ChangeDutyCycle(abs(motor_right) * 100)
+>>>>>>> c01a22510e7f854cee200390ec80a184b70ef778
 
             if motor_left > 0:
                 GPIO.output(LEFT_MOTOR_DIR_1, 1)
                 GPIO.output(LEFT_MOTOR_DIR_2, 0)
+<<<<<<< HEAD
                 #pins_state_string += "L DIR1: 1, L DIR2: 0 | "
+=======
+>>>>>>> c01a22510e7f854cee200390ec80a184b70ef778
 
             elif motor_left < 0:
                 GPIO.output(LEFT_MOTOR_DIR_1, 0)
                 GPIO.output(LEFT_MOTOR_DIR_2, 1)
+<<<<<<< HEAD
                 #pins_state_string += "L DIR1: 0, L DIR2: 1 | "
                 
             elif motor_left== 0:
@@ -189,23 +240,38 @@ def motor_driver():
                 GPIO.output(LEFT_MOTOR_DIR_2, 0)
                 #pins_state_string += "L DIR1: 0, L DIR2: 0 | "
             
+=======
+
+            elif motor_left== 0:
+                GPIO.output(LEFT_MOTOR_DIR_1, 0)
+                GPIO.output(LEFT_MOTOR_DIR_2, 0)
+>>>>>>> c01a22510e7f854cee200390ec80a184b70ef778
 
             if motor_right > 0:
                 GPIO.output(RIGHT_MOTOR_DIR_1, 1)
                 GPIO.output(RIGHT_MOTOR_DIR_2, 0)
+<<<<<<< HEAD
                 #pins_state_string += "R DIR1: 1, R DIR2: 0 | "
+=======
+>>>>>>> c01a22510e7f854cee200390ec80a184b70ef778
 
             elif motor_right < 0:
                 GPIO.output(RIGHT_MOTOR_DIR_1, 0)
                 GPIO.output(RIGHT_MOTOR_DIR_2, 1)
+<<<<<<< HEAD
                 #pins_state_string += "R DIR1: 0, R DIR2: 1 | "
+=======
+>>>>>>> c01a22510e7f854cee200390ec80a184b70ef778
 
             elif motor_right== 0:
                 GPIO.output(RIGHT_MOTOR_DIR_1, 0)
                 GPIO.output(RIGHT_MOTOR_DIR_2, 0)
+<<<<<<< HEAD
                 #pins_state_string += "R DIR1: 0, R DIR2: 0 | "
 
             #print(pins_state_string)
+=======
+>>>>>>> c01a22510e7f854cee200390ec80a184b70ef778
 
 
         # perfect delay for making loop oscillate exactly at loop_hz frequency, no matter how long does it take to execute the code inside the loop
