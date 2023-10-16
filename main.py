@@ -230,6 +230,8 @@ def video_writer():
 
 if __name__ == "__main__":
     global run_path
+    global camera
+
     run_path = os.path.dirname(__file__)
 
     video_path = os.path.join(run_path, "videos")
@@ -243,11 +245,17 @@ if __name__ == "__main__":
 
     buttons_array = [False, False, False, False]
 
-    t = threading.Thread(target=motor_driver, daemon=True)
-    t.start()
+    # motor driver thread
+    t_motor = threading.Thread(target=motor_driver, daemon=True)
+    t_motor.start()
 
-    global camera
-    camera = cv2.VideoCapture(0)    
+    
+    camera = cv2.VideoCapture(0)
+
+    # video writer thread
+    t_video = threading.Thread(target=video_writer, daemon=True)
+    t_video.start()
+    
 
     # start flask app
     app.run(debug=False, port=5002, host=ip)
