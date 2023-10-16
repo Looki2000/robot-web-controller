@@ -66,7 +66,6 @@ frame_lock = threading.Lock()
 
 
 def gen_frames():
-    camera = cv2.VideoCapture(0)
 
     while True:
         success, frame = camera.read()
@@ -82,8 +81,8 @@ def gen_frames():
 
 
     # stop camera
-    camera.release()
-    print("Camera released")
+    #camera.release()
+    #print("Camera released")
 
 
 @app.route('/')
@@ -213,9 +212,29 @@ def motor_driver():
 
 
 
+def video_writer():
+    fps = camera.get(cv2.CAP_PROP_FPS)
+    width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%Y-%m-%d_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), fps, (width, height))
+
+    while True:
+        success, frame = camera.read()
+        if not success:
+            continue
+        else:
+            writer.write(frame)
+
+
+
 if __name__ == "__main__":
-        
-    ip_path = os.path.join(os.path.dirname(__file__), "ip.txt")
+    global run_path
+    run_path = os.path.dirname(__file__)
+
+    video_path = os.path.join(run_path, "videos")
+    
+    ip_path = os.path.join(run_path, "ip.txt")
 
     
     with open(ip_path, "r") as f:
@@ -227,4 +246,8 @@ if __name__ == "__main__":
     t = threading.Thread(target=motor_driver, daemon=True)
     t.start()
 
+    global camera
+    camera = cv2.VideoCapture(0)    
+
+    # start flask app
     app.run(debug=False, port=5002, host=ip)
