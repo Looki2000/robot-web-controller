@@ -9,6 +9,9 @@ from flask import request
 import sys
 
 
+print("ver 1")
+
+
 ######## CONFIG ########
 
 loop_hz = 60
