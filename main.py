@@ -238,6 +238,10 @@ def video_writer():
         print("cam fps:", fps)
         print(f"{width} x {height}")
 
+        # create video_path folder if it doesn't exist
+        if not os.path.exists(video_path):
+            os.makedirs(video_path)
+
 
         writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%Y-%m-%d_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), fps, (width, height))
     
