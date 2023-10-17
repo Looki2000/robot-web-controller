@@ -9,7 +9,7 @@ from flask import request
 import sys
 
 
-print("ver 2")
+print("ver 3")
 
 
 ######## CONFIG ########
@@ -182,7 +182,7 @@ def motor_driver():
         
         # if last received data is older than some amount of time, set buttons_array to zeros
         # this time should be about 2x the time of the loop cycle set in the script.js
-        if time.perf_counter() - last_received_time > 1.5:
+        if time.perf_counter() - last_received_time > 0.4:
             buttons_array = [False, False, False, False]
 
             connection_state = False

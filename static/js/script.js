@@ -22,7 +22,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 
     function send_buttons_data(buttons_array) {
-        document.getElementById("button_state").innerHTML = buttons_array;
+        document.getElementById("button_state").innerHTML = "ver 3 " + buttons_array;
     
         // send button states to server as raw binary data
         var xhttp = new XMLHttpRequest();
@@ -82,7 +82,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         var currentTime = performance.now();
         var elapsed = currentTime - lastUpdateTime;
 
-        if (elapsed >= 1000) {
+        if (elapsed >= 200) {
             send_buttons_data(buttons);
             //document.getElementById("button_state").innerHTML += test;
             //test++;
