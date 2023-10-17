@@ -16,7 +16,7 @@ write_video = True
 
 # selection for acceleration system version
 # 0 - first version, 1 - second version
-accel_system = 1
+accel_system = 0
 
 ## config for acceleration system second version (has no affect on the first version)
 # atack and release in seconds
