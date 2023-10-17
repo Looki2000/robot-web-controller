@@ -21,7 +21,7 @@ write_video = True
 
 # selection for acceleration system version
 # 0 - first version, 1 - second version
-accel_system = 0
+accel_system = 1
 
 ## config for acceleration system second version (has no affect on the first version)
 # atack and release in seconds
@@ -172,8 +172,6 @@ def motor_driver():
 
     motor_left = 0.0
     motor_right = 0.0
-    motor_right_target = 0.0
-    motor_left_target = 0.0
 
     last_received_time = time.perf_counter()
 
@@ -205,6 +203,9 @@ def motor_driver():
             motor_left_old = motor_left
             # processing buttons array to make smooth movement
             #print(buttons_array)
+
+        motor_right_target = 0.0
+        motor_left_target = 0.0
 
         # forward
         if buttons_array[0]:
