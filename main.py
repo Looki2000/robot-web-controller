@@ -139,11 +139,11 @@ def motor_driver():
 
 
         if buttons_array[0]:
-            motor_right_target += 1.0
-            motor_left_target += 1.0
-        if buttons_array[1]:
             motor_right_target -= 1.0
             motor_left_target -= 1.0
+        if buttons_array[1]:
+            motor_right_target += 1.0
+            motor_left_target += 1.0
         if buttons_array[2]:
             motor_right_target += 0.5
             motor_left_target -= 0.5
