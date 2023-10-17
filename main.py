@@ -163,16 +163,16 @@ def motor_driver():
             motor_left_old = motor_left
             # processing buttons array to make smooth movement
             #print(buttons_array)
-    
+
         # forward
         if buttons_array[0]:
-            motor_right_target += 1.0
-            motor_left_target += 1.0
+            motor_right_target -= 1.0
+            motor_left_target -= 1.0
 
         # backward
         if buttons_array[1]:
-            motor_right_target -= 1.0
-            motor_left_target -= 1.0
+            motor_right_target += 1.0
+            motor_left_target += 1.0
 
         # left
         if buttons_array[2]:
