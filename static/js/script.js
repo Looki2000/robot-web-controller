@@ -23,7 +23,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     function send_buttons_data(buttons_array) {
         document.getElementById("button_state").innerHTML = buttons_array;
-
+    
         // send button states to server as raw binary data
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "/buttons", true);
@@ -46,25 +46,54 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         element.addEventListener("mousedown", function () {
             buttons[idx] = true;
-            send_buttons_data(buttons);
+            //send_buttons_data(buttons);
         });
 
         element.addEventListener("mouseup", function () {
             buttons[idx] = false;
-            send_buttons_data(buttons);
+            //send_buttons_data(buttons);
         });
 
         element.addEventListener("touchstart", function () {
             buttons[idx] = true;
-            send_buttons_data(buttons);
+            //send_buttons_data(buttons);
         });
 
         element.addEventListener("touchend", function () {
             buttons[idx] = false;
-            send_buttons_data(buttons);
+            //send_buttons_data(buttons);
         });
 
     });
+
+    //// add loop to send button states to server
+    //// 200ms is 5hz
+    //var test = 0;
+    //setInterval(function () {
+    //    send_buttons_data(buttons);
+    //    document.getElementById("button_state").innerHTML += test;
+    //    test++;
+    //}, 200);
+
+    var lastUpdateTime = 0;
+    var test = 0;
+
+    function update() {
+        var currentTime = performance.now();
+        var elapsed = currentTime - lastUpdateTime;
+
+        if (elapsed >= 200) {
+            send_buttons_data(buttons);
+            document.getElementById("button_state").innerHTML += test;
+            test++;
+            lastUpdateTime = currentTime;
+        }
+
+        requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+
 
 });
 

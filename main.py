@@ -24,6 +24,10 @@ accel_atack = 0.5
 accel_release = 0.2
 
 
+# video write config
+vid_write_fps = 30
+vid_write_res = (640, 480)
+
 ########################
 
 
@@ -90,6 +94,8 @@ frame_lock = threading.Lock()
 
 
 def gen_frames():
+    global frame
+    global new_frame_ready
 
     while True:
         if new_frame_ready:
@@ -129,6 +135,7 @@ def video_feed():
 @app.route('/buttons', methods=['POST'])
 def buttons():
     global buttons_array
+    global last_received_time
 
     if request.method == 'POST':
         
@@ -136,9 +143,12 @@ def buttons():
         data = request.data
         buttons_array = struct.unpack('4?', data)
 
+        last_received_time = time.perf_counter()
+
         return 'success', 200
     else:
         return 'error', 404
+
 
 def clamp(val, min, max):
     if val < min:
@@ -150,12 +160,37 @@ def clamp(val, min, max):
 
 
 def motor_driver():
+    global last_received_time
+    global buttons_array
+
     motor_left = 0.0
     motor_right = 0.0
     motor_right_target = 0.0
     motor_left_target = 0.0
 
+    last_received_time = time.perf_counter()
+
+    connection_state = False
+    last_connection_state = False
+
     while True:
+        
+        # if last received data is older than some amount of time, set buttons_array to zeros
+        # this time should be about 2x the time of the loop cycle set in the script.js
+        if time.perf_counter() - last_received_time > 0.4:
+            buttons_array = [False, False, False, False]
+
+            connection_state = False
+
+        else:
+            connection_state = True
+
+        if connection_state != last_connection_state:
+            print("New connection acomplished!" if connection_state else "Connection lost!")
+
+        last_connection_state = connection_state
+
+
 
         # first version of acceleration system
         if accel_system == 0:
@@ -290,19 +325,21 @@ def video_writer():
     camera = cv2.VideoCapture(0)
     
     if write_video:
-        fps = camera.get(cv2.CAP_PROP_FPS)
-        width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        
-        print("cam fps:", fps)
-        print(f"{width} x {height}")
+        #fps = camera.get(cv2.CAP_PROP_FPS)
+        #width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+        #height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        #
+        #print("cam fps:", fps)
+        #print(f"{width} x {height}")
 
         # create video_path folder if it doesn't exist
         if not os.path.exists(video_path):
             os.makedirs(video_path)
 
+        print(f"Camera FPS: {vid_write_fps}")
+        print(f"Camera resolution: {vid_write_res[0]} x {vid_write_res[1]}")
 
-        writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%Y-%m-%d_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), fps, (width, height))
+        writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%d-%m-%Y_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), vid_write_fps, vid_write_res)
     
     print("capturing!")
     while True:
