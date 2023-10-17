@@ -9,11 +9,28 @@ import sys
 
 ######## CONFIG ########
 
+loop_hz = 60
+
 host_port = 5002
 write_video = True
 
+# selection for acceleration system version
+# 0 - first version, 1 - second version
+accel_system = 1
+
+## config for acceleration system second version (has no affect on the first version)
+# atack and release in seconds
+accel_atack = 0.5
+accel_release = 0.2
+
+
 ########################
 
+
+loop_delay = 1/loop_hz
+
+accel_atack = 1/accel_atack * loop_hz
+accel_release = 1/accel_release * loop_hz
 
 
 # if linux
@@ -62,8 +79,7 @@ log.setLevel(logging.ERROR)
 
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
 
-loop_hz = 60
-loop_delay = 1/loop_hz
+
 
 #Initialize the Flask app
 app = Flask(__name__)
@@ -124,50 +140,93 @@ def buttons():
     else:
         return 'error', 404
 
+def clamp(val, min, max):
+    if val < min:
+        return min
+    elif val > max:
+        return max
+    else:
+        return val
 
 
 def motor_driver():
     motor_left = 0.0
     motor_right = 0.0
+    motor_right_target = 0.0
+    motor_left_target = 0.0
+
     while True:
-        motor_right_target = 0.0
-        motor_left_target = 0.0
-        motor_right_old = motor_right
-        motor_left_old = motor_left
-        # processing buttons array to make smooth movement
-        #print(buttons_array)
 
-
+        # first version of acceleration system
+        if accel_system == 0:
+            motor_right_old = motor_right
+            motor_left_old = motor_left
+            # processing buttons array to make smooth movement
+            #print(buttons_array)
+    
+        # forward
         if buttons_array[0]:
             motor_right_target += 1.0
             motor_left_target += 1.0
+
+        # backward
         if buttons_array[1]:
             motor_right_target -= 1.0
             motor_left_target -= 1.0
+
+        # left
         if buttons_array[2]:
             motor_right_target += 0.5
             motor_left_target -= 0.5
+
+        # right
         if buttons_array[3]:
             motor_right_target -= 0.5
             motor_left_target += 0.5
 
-        if motor_right_target > 1.0:
-            motor_right_target = 1.0
-        if motor_right_target < -1.0:
-            motor_right_target = -1.0
+        # clamp values
+        motor_right_target = clamp(motor_right_target, -1.0, 1.0)
+        motor_left_target = clamp(motor_left_target, -1.0, 1.0)
 
-        if motor_left_target > 1.0:
-            motor_left_target = 1.0
-        if motor_left_target < -1.0:
-            motor_left_target = -1.0
+        # first version of acceleration system
+        if accel_system == 0:
+            motor_left = (motor_left_target + motor_left_old) / 2
+            motor_right = (motor_right_target + motor_right_old) / 2
 
-        motor_left = (motor_left_target + motor_left_old) / 2
-        motor_right = (motor_right_target + motor_right_old) / 2
+            if motor_left_target - motor_left_old < 0.1:
+                motor_left = motor_left_target
+            if motor_right_target - motor_right_old < 0.1:
+                motor_right = motor_right_target
 
-        if motor_left_target - motor_left_old < 0.1:
-            motor_left = motor_left_target
-        if motor_right_target - motor_right_old < 0.1:
-            motor_right = motor_right_target
+        # second version of acceleration system
+        elif accel_system == 1:
+
+            # update motor values if they are not equal to target
+            # use atack if new target is greater than current value
+            # use release if new target is less than current value
+
+            # right motor
+            if motor_right_target > motor_right:
+                motor_right += accel_atack
+                if motor_right > motor_right_target:
+                    motor_right = motor_right_target
+
+            elif motor_right_target < motor_right:
+                motor_right -= accel_release
+                if motor_right < motor_right_target:
+                    motor_right = motor_right_target
+
+            # left motor
+            if motor_left_target > motor_left:
+                motor_left += accel_atack
+                if motor_left > motor_left_target:
+                    motor_left = motor_left_target
+
+            elif motor_left_target < motor_left:
+                motor_left -= accel_release
+                if motor_left < motor_left_target:
+                    motor_left = motor_left_target
+
 
         #print(buttons_array)
         #print(f"motor_left: {motor_left}, motor_right: {motor_right}")
