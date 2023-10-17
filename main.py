@@ -7,6 +7,14 @@ import threading
 from flask import request
 import sys
 
+######## CONFIG ########
+
+host_port = 5002
+write_video = True
+
+########################
+
+
 
 # if linux
 is_linux = sys.platform.startswith("linux")
@@ -16,7 +24,7 @@ if is_linux:
     import RPi.GPIO as GPIO
 
     # get pid of port 5002
-    pid = os.popen("lsof -t -i:5002").read()
+    pid = os.popen(f"lsof -t -i:{host_port}").read()
 
     print(f"pid: {pid}")
 
@@ -218,15 +226,20 @@ def motor_driver():
 def video_writer():
     global frame
     global new_frame_ready
-    
-    fps = camera.get(cv2.CAP_PROP_FPS)
-    width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    
-    print("cam fps:", fps)
-    print(f"{width} x {height}")
+    global camera
 
-    writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%Y-%m-%d_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), fps, (width, height))
+    camera = cv2.VideoCapture(0)
+    
+    if write_video:
+        fps = camera.get(cv2.CAP_PROP_FPS)
+        width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        
+        print("cam fps:", fps)
+        print(f"{width} x {height}")
+
+
+        writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%Y-%m-%d_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), fps, (width, height))
     
     print("capturing!")
     while True:
@@ -235,7 +248,8 @@ def video_writer():
             continue
         else:
             new_frame_ready = True
-            writer.write(frame)
+            if write_video:
+                writer.write(frame)
 
 
 
@@ -250,7 +264,7 @@ if __name__ == "__main__":
     
     with open(ip_path, "r") as f:
         ip = f.read().splitlines()[0]
-        print(f"ip: {ip}")
+        print(f"web address: {ip}:{host_port}")
 
     buttons_array = [False, False, False, False]
 
@@ -259,15 +273,19 @@ if __name__ == "__main__":
     t_motor.start()
 
     
-    camera = cv2.VideoCapture(0)
+    camera = None
 
     # video writer thread
-    print("starting vid write thread")
+    print("starting camera thread...")
     new_frame_ready = False
     t_video = threading.Thread(target=video_writer, daemon=True)
     t_video.start()
     
+    while camera is None:
+        time.sleep(0.1)
+
+    print("camera initialized!")
     
 
     # start flask app
-    app.run(debug=False, port=5002, host=ip)
+    app.run(debug=False, port=host_port, host=ip)
