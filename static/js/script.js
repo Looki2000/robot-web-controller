@@ -76,7 +76,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     //}, 200);
 
     var lastUpdateTime = 0;
-    var test = 0;
+    //var test = 0;
 
     function update() {
         var currentTime = performance.now();
@@ -84,8 +84,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         if (elapsed >= 200) {
             send_buttons_data(buttons);
-            document.getElementById("button_state").innerHTML += test;
-            test++;
+            //document.getElementById("button_state").innerHTML += test;
+            //test++;
             lastUpdateTime = currentTime;
         }
 
