@@ -35,7 +35,7 @@ vid_write_res = (640, 480)
 
 ########################
 
-
+vid_write_delay = 1/vid_write_fps
 
 
 loop_delay = 1/loop_hz
@@ -325,29 +325,23 @@ def motor_driver():
 
 
 
-def video_writer():
+def video_capture():
     global frame
     global new_frame_ready
     global camera
 
     camera = cv2.VideoCapture(0)
     
-    if write_video:
-        #fps = camera.get(cv2.CAP_PROP_FPS)
-        #width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
-        #height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        #
-        #print("cam fps:", fps)
-        #print(f"{width} x {height}")
-
-        # create video_path folder if it doesn't exist
-        if not os.path.exists(video_path):
-            os.makedirs(video_path)
-
-        print(f"Camera FPS: {vid_write_fps}")
-        print(f"Camera resolution: {vid_write_res[0]} x {vid_write_res[1]}")
-
-        writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%d-%m-%Y_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), vid_write_fps, vid_write_res)
+    #if write_video:
+#
+    #    # create video_path folder if it doesn't exist
+    #    if not os.path.exists(video_path):
+    #        os.makedirs(video_path)
+#
+    #    print(f"Camera FPS: {vid_write_fps}")
+    #    print(f"Camera resolution: {vid_write_res[0]} x {vid_write_res[1]}")
+#
+    #    writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%d-%m-%Y_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), vid_write_fps, vid_write_res)
     
     print("capturing!")
     while True:
@@ -356,8 +350,33 @@ def video_writer():
             continue
         else:
             new_frame_ready = True
-            if write_video:
-                writer.write(frame)
+            #if write_video:
+            #    writer.write(frame)
+
+
+def video_write():
+    global frame
+
+    # create video_path folder if it doesn't exist
+    if not os.path.exists(video_path):
+        os.makedirs(video_path)
+
+    print(f"Camera FPS: {vid_write_fps}")
+    print(f"Camera resolution: {vid_write_res[0]} x {vid_write_res[1]}")
+
+    writer = cv2.VideoWriter(os.path.join(video_path, time.strftime("%d-%m-%Y_%H-%M-%S") + ".avi"), cv2.VideoWriter_fourcc(*'XVID'), vid_write_fps, vid_write_res)
+
+    start_time = time.perf_counter()
+    frame_counter = 1
+    next_frame_time = start_time + frame_counter * vid_write_delay
+
+    while True:
+        if time.perf_counter() >= next_frame_time:
+            frame_counter += 1
+            next_frame_time = start_time + frame_counter * vid_write_delay
+
+            writer.write(frame)
+
 
 
 
@@ -383,14 +402,20 @@ if __name__ == "__main__":
     
     camera = None
 
-    # video writer thread
+    # video capture thread
     print("starting camera thread...")
     new_frame_ready = False
-    t_video = threading.Thread(target=video_writer, daemon=True)
+    t_video = threading.Thread(target=video_capture, daemon=True)
     t_video.start()
     
     while camera is None:
         time.sleep(0.1)
+
+    # video capture thread (if video writing is enabled)
+    if write_video:
+        print("starting video writer thread...")
+        t_video_write = threading.Thread(target=video_write, daemon=True)
+        t_video_write.start()
 
     print("camera initialized!")
     
