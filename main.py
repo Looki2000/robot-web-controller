@@ -217,6 +217,7 @@ def motor_driver():
 
 def video_writer():
     global frame
+    global new_frame_ready
     
     fps = camera.get(cv2.CAP_PROP_FPS)
     width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -239,7 +240,6 @@ def video_writer():
 
 
 if __name__ == "__main__":
-    global new_frame_ready
 
     run_path = os.path.dirname(__file__)
 
