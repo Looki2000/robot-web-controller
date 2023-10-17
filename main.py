@@ -11,9 +11,6 @@ import sys
 
 ######## CONFIG ########
 
-# time in seconds after which the script stops waiting for user input and proceeds to run
-run_timeout = 2
-
 loop_hz = 60
 
 host_port = 5002
@@ -34,28 +31,6 @@ vid_write_fps = 30
 vid_write_res = (640, 480)
 
 ########################
-
-
-
-def get_user_input():
-    input(f"Press Enter within {run_timeout} seconds to exit...")
-    print("You pressed Enter! Exiting...")
-    
-    # stop main thread
-    os._exit(0)
-
-# Create a thread to get user input
-input_thread = threading.Thread(target=get_user_input, daemon=True)
-
-# Start the thread
-input_thread.start()
-
-# Wait for n seconds for user input
-input_thread.join(timeout=run_timeout)
-
-# Check if the thread is still alive (no input provided)
-if input_thread.is_alive():
-    print("\nYou didn't press Enter in time. Continuing...")
 
 
 
