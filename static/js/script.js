@@ -46,22 +46,22 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         element.addEventListener("mousedown", function () {
             buttons[idx] = true;
-            //send_buttons_data(buttons);
+            send_buttons_data(buttons);
         });
 
         element.addEventListener("mouseup", function () {
             buttons[idx] = false;
-            //send_buttons_data(buttons);
+            send_buttons_data(buttons);
         });
 
         element.addEventListener("touchstart", function () {
             buttons[idx] = true;
-            //send_buttons_data(buttons);
+            send_buttons_data(buttons);
         });
 
         element.addEventListener("touchend", function () {
             buttons[idx] = false;
-            //send_buttons_data(buttons);
+            send_buttons_data(buttons);
         });
 
     });
@@ -96,6 +96,3 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 
 });
-
-
-
