@@ -82,7 +82,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         var currentTime = performance.now();
         var elapsed = currentTime - lastUpdateTime;
 
-        if (elapsed >= 200) {
+        if (elapsed >= 1000) {
             send_buttons_data(buttons);
             //document.getElementById("button_state").innerHTML += test;
             //test++;
